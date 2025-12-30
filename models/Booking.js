@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const passengerSchema = new mongoose.Schema({
+    firstName: String,
+    lastName: String,
+    passportNumber: String,
+});
+
 const bookingSchema = new mongoose.Schema({
     flight: {
         type: mongoose.Schema.Types.ObjectId,
@@ -9,13 +15,9 @@ const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        // required: true // Make optional for guest checkout for now
     },
-    passengers: [{
-        firstName: String,
-        lastName: String,
-        passportNumber: String,
-    }],
+    passengers: [passengerSchema],
+    seats: [String],
     totalPrice: {
         type: Number,
         required: true,

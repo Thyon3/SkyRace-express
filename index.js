@@ -18,13 +18,10 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-const flightsRoute = require('./routes/flights');
-const bookingsRoute = require('./routes/bookings');
-const authRoute = require('./routes/auth');
-
-app.use('/api/flights', flightsRoute);
-app.use('/api/bookings', bookingsRoute);
-app.use('/api/auth', authRoute);
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/flights', require('./routes/flights'));
+app.use('/api/bookings', require('./routes/bookings'));
+app.use('/api/payments', require('./routes/payments'));
 
 const { errorHandler } = require('./middleware/error');
 app.use(errorHandler);

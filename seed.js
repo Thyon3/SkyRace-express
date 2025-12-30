@@ -2,6 +2,23 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Flight = require('./models/Flight');
 
+function generateSeats() {
+    const seats = [];
+    const rows = 10;
+    const cols = ['A', 'B', 'C', 'D', 'E', 'F'];
+    for (let i = 1; i <= rows; i++) {
+        for (const col of cols) {
+            seats.push({
+                number: `${i}${col}`,
+                type: i <= 2 ? 'business' : 'economy',
+                isOccupied: Math.random() < 0.2,
+                price: i <= 2 ? 100 : 0
+            });
+        }
+    }
+    return seats;
+}
+
 const flights = [
     {
         airline: 'SkyRace Air',
@@ -13,6 +30,9 @@ const flights = [
         duration: 435,
         price: 450,
         isDirect: true,
+        fareRules: 'Economy Classic: 1 checked bag included. Changes allowed with $150 fee.',
+        refundPolicy: 'Non-refundable after 24 hours.',
+        seats: generateSeats(),
     },
     {
         airline: 'Oceanic',
@@ -24,6 +44,9 @@ const flights = [
         duration: 75,
         price: 120,
         isDirect: true,
+        fareRules: 'Light Fare: No checked bags. Changes not permitted.',
+        refundPolicy: 'Fully refundable within 2 hours.',
+        seats: generateSeats(),
     },
     {
         airline: 'Global Jet',
@@ -35,6 +58,9 @@ const flights = [
         duration: 1080,
         price: 850,
         isDirect: false,
+        fareRules: 'Premium Economy: 2 checked bags. Free changes.',
+        refundPolicy: 'Refundable with $100 processing fee.',
+        seats: generateSeats(),
     },
 ];
 

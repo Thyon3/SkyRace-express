@@ -41,6 +41,20 @@ const flightSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    fareRules: {
+        type: String,
+        default: 'Standard fare rules apply. Changes may incur a fee.',
+    },
+    refundPolicy: {
+        type: String,
+        default: 'Refundable within 24 hours of booking.',
+    },
+    seats: [{
+        number: String,
+        type: { type: String, enum: ['economy', 'business', 'first'], default: 'economy' },
+        isOccupied: { type: Boolean, default: false },
+        price: { type: Number, default: 0 }
+    }]
 });
 
 module.exports = mongoose.model('Flight', flightSchema);

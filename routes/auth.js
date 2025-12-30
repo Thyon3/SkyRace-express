@@ -91,4 +91,22 @@ router.put('/profile', auth, async (req, res) => {
     }
 });
 
+// Update Preferences
+router.put('/preferences', auth, async (req, res) => {
+    try {
+        const { language, currency, theme } = req.body;
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        if (language) user.preferences.language = language;
+        if (currency) user.preferences.currency = currency;
+        if (theme) user.preferences.theme = theme;
+
+        await user.save();
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

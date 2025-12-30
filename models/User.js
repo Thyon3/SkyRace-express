@@ -15,6 +15,20 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    preferences: {
+        language: { type: String, default: 'en' },
+        currency: { type: String, default: 'USD' },
+        theme: { type: String, default: 'light' },
+    },
+    loyaltyPoints: {
+        type: Number,
+        default: 0,
+    },
+    loyaltyTier: {
+        type: String,
+        enum: ['Bronze', 'Silver', 'Gold', 'Platinum'],
+        default: 'Bronze',
+    },
     createdAt: {
         type: Date,
         default: Date.now,
