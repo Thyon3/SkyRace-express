@@ -2,17 +2,28 @@ const User = require('../../models/User');
 
 exports.getAllUsers = async (req, res) => {
     try {
+        const { search, role, loyaltyTier } = req.query;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const users = await User.find()
+        const query = {};
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } }
+            ];
+        }
+        if (role) query.role = role;
+        if (loyaltyTier) query.loyaltyTier = loyaltyTier;
+
+        const users = await User.find(query)
             .select('-password')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });
 
-        const total = await User.countDocuments();
+        const total = await User.countDocuments(query);
 
         res.json({
             users,
