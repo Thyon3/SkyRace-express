@@ -18,6 +18,9 @@ app.use('/api/flights', flightsRoute);
 app.use('/api/bookings', bookingsRoute);
 app.use('/api/auth', authRoute);
 
+const { errorHandler } = require('./middleware/error');
+app.use(errorHandler);
+
 app.get('/', (req, res) => {
     res.send('Skyrace Backend is running');
 });
