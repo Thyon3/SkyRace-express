@@ -109,4 +109,26 @@ router.put('/preferences', auth, async (req, res) => {
     }
 });
 
+// Get Saved Passengers
+router.get('/saved-passengers', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        res.json(user.savedPassengers);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Add Saved Passenger
+router.post('/saved-passengers', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        user.savedPassengers.push(req.body);
+        await user.save();
+        res.json(user.savedPassengers);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

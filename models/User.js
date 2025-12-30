@@ -29,6 +29,13 @@ const userSchema = new mongoose.Schema({
         enum: ['Bronze', 'Silver', 'Gold', 'Platinum'],
         default: 'Bronze',
     },
+    savedPassengers: [{
+        firstName: String,
+        lastName: String,
+        passportNumber: String,
+        dateOfBirth: Date,
+        nationality: String
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

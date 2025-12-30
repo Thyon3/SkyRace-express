@@ -54,7 +54,20 @@ const flightSchema = new mongoose.Schema({
         type: { type: String, enum: ['economy', 'business', 'first'], default: 'economy' },
         isOccupied: { type: Boolean, default: false },
         price: { type: Number, default: 0 }
-    }]
+    }],
+    status: {
+        type: String,
+        enum: ['On Time', 'Delayed', 'Cancelled', 'Departed', 'Arrived'],
+        default: 'On Time'
+    },
+    gate: {
+        type: String,
+        default: 'TBD'
+    },
+    terminal: {
+        type: String,
+        default: '1'
+    }
 });
 
 module.exports = mongoose.model('Flight', flightSchema);
