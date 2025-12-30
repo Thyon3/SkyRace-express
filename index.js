@@ -36,6 +36,7 @@ app.use('/api/admin/airlines', require('./routes/admin/airlines'));
 app.use('/api/admin/airports', require('./routes/admin/airports'));
 app.use('/api/admin/notifications', require('./routes/admin/notifications'));
 app.use('/api/admin/profile', require('./routes/admin/profile'));
+app.use('/api/admin/system-settings', require('./routes/admin/systemSettings'));
 app.use('/api/admin/audit', require('./routes/admin/audit'));
 
 const { errorHandler } = require('./middleware/error');
