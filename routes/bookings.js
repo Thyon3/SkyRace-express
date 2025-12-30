@@ -2,14 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
 const { validate, bookingSchema } = require('../middleware/validation');
+const auth = require('../middleware/auth');
 
 // Create a booking
-router.post('/', validate(bookingSchema), async (req, res) => {
+router.post('/', [auth, validate(bookingSchema)], async (req, res) => {
     try {
         const { flightId, passengers, totalPrice } = req.body;
 
         const booking = new Booking({
-            flight: flightId, // Assuming flightId is the MongoDB ID
+            user: req.user._id,
+            flight: flightId,
             passengers,
             totalPrice,
             status: 'confirmed'
@@ -26,10 +28,10 @@ router.post('/', validate(bookingSchema), async (req, res) => {
     }
 });
 
-// Get all bookings (for a user - mock for now)
-router.get('/', async (req, res) => {
+// Get all bookings for the authenticated user
+router.get('/', auth, async (req, res) => {
     try {
-        const bookings = await Booking.find().sort({ createdAt: -1 });
+        const bookings = await Booking.find({ user: req.user._id }).sort({ createdAt: -1 });
         res.json(bookings);
     } catch (err) {
         res.status(500).json({ message: err.message });

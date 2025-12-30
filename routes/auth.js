@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { validate, authSchema } = require('../middleware/validation');
+const auth = require('../middleware/auth');
 
 // Register
 router.post('/register', validate(authSchema), async (req, res) => {
@@ -64,13 +65,11 @@ router.post('/login', async (req, res) => {
 });
 
 // Update Profile
-router.put('/profile', async (req, res) => {
+router.put('/profile', auth, async (req, res) => {
     try {
-        const { name, email } = req.body;
-        // In a real app, we'd get the user ID from the auth middleware
-        // For now, we'll find by email as a simple way to demonstrate
-        const user = await User.findOneAndUpdate(
-            { email },
+        const { name } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
             { name },
             { new: true }
         );
