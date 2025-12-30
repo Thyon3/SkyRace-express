@@ -23,6 +23,14 @@ app.use('/api/flights', require('./routes/flights'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/payments', require('./routes/payments'));
 
+// Admin Routes
+app.use('/api/admin/auth', require('./routes/admin/auth'));
+app.use('/api/admin/users', require('./routes/admin/users'));
+app.use('/api/admin/bookings', require('./routes/admin/bookings'));
+app.use('/api/admin/flights', require('./routes/admin/flights'));
+app.use('/api/admin/dashboard', require('./routes/admin/dashboard'));
+app.use('/api/admin/audit', require('./routes/admin/audit'));
+
 const { errorHandler } = require('./middleware/error');
 app.use(errorHandler);
 
