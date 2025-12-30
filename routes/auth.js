@@ -9,21 +9,27 @@ router.post('/register', validate(authSchema), async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        // Check if user exists
-        // const existingUser = await User.findOne({ email });
-        // if (existingUser) return res.status(400).json({ message: 'User already exists' });
+        // Check if user already exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
 
-        // const user = new User({ name, email, password });
-        // await user.save();
+        user = new User({ name, email, password });
+        await user.save();
 
-        const token = jwt.sign({ id: 'mock_user_id' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
 
         res.status(201).json({
             token,
-            user: { id: 'mock_user_id', name, email }
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
         });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
@@ -32,19 +38,28 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // const user = await User.findOne({ email });
-        // if (!user || !(await user.comparePassword(password))) {
-        //   return res.status(400).json({ message: 'Invalid credentials' });
-        // }
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
 
-        const token = jwt.sign({ id: 'mock_user_id' }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
 
         res.json({
             token,
-            user: { id: 'mock_user_id', name: 'John Doe', email }
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
         });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
@@ -52,10 +67,25 @@ router.post('/login', async (req, res) => {
 router.put('/profile', async (req, res) => {
     try {
         const { name, email } = req.body;
-        // Mock update
+        // In a real app, we'd get the user ID from the auth middleware
+        // For now, we'll find by email as a simple way to demonstrate
+        const user = await User.findOneAndUpdate(
+            { email },
+            { name },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
         res.json({
             message: 'Profile updated successfully',
-            user: { name, email }
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
         });
     } catch (err) {
         res.status(500).json({ message: err.message });

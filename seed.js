@@ -13,6 +13,7 @@ const flights = [
         departureTime: new Date(Date.now() + 86400000), // Tomorrow
         arrivalTime: new Date(Date.now() + 86400000 + 7 * 3600000),
         price: 450,
+        currency: 'USD'
     },
     {
         airline: 'SkyRace Air',
@@ -22,6 +23,7 @@ const flights = [
         departureTime: new Date(Date.now() + 2 * 86400000),
         arrivalTime: new Date(Date.now() + 2 * 86400000 + 2 * 3600000),
         price: 120,
+        currency: 'USD'
     },
     {
         airline: 'Oceanic Airlines',
@@ -31,19 +33,20 @@ const flights = [
         departureTime: new Date(Date.now() + 3 * 86400000),
         arrivalTime: new Date(Date.now() + 3 * 86400000 + 14 * 3600000),
         price: 1200,
+        currency: 'USD'
     },
 ];
 
 const seedDB = async () => {
     try {
-        // await mongoose.connect(process.env.MONGODB_URI);
-        // await Flight.deleteMany({});
-        // await Flight.insertMany(flights);
-        console.log('Database seeded successfully (Mock)');
-        // process.exit();
+        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/skyrace');
+        await Flight.deleteMany({});
+        await Flight.insertMany(flights);
+        console.log('Database seeded successfully');
+        process.exit();
     } catch (err) {
         console.error(err);
-        // process.exit(1);
+        process.exit(1);
     }
 };
 

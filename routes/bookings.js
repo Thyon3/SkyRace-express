@@ -8,52 +8,42 @@ router.post('/', validate(bookingSchema), async (req, res) => {
     try {
         const { flightId, passengers, totalPrice } = req.body;
 
-        // In a real app, validate flight existence and price
-
         const booking = new Booking({
-            flight: flightId,
+            flight: flightId, // Assuming flightId is the MongoDB ID
             passengers,
             totalPrice,
             status: 'confirmed'
         });
 
-        // await booking.save(); // Commented out as we don't have DB connection
+        await booking.save();
 
-        // Return mock success
         res.status(201).json({
             message: 'Booking created successfully',
-            booking: {
-                _id: 'mock_booking_id_' + Date.now(),
-                ...req.body,
-                status: 'confirmed'
-            }
+            booking
         });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
-// Get booking by ID
+// Get all bookings (for a user - mock for now)
+router.get('/', async (req, res) => {
+    try {
+        const bookings = await Booking.find().sort({ createdAt: -1 });
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Get single booking
 router.get('/:id', async (req, res) => {
     try {
-        // const booking = await Booking.findById(req.params.id).populate('flight');
-        // if (!booking) return res.status(404).json({ message: 'Booking not found' });
-        // res.json(booking);
-
-        res.json({
-            _id: req.params.id,
-            flight: {
-                airline: 'SkyRace Air',
-                flightNumber: 'SK123',
-                origin: 'New York (JFK)',
-                destination: 'London (LHR)',
-                departureTime: new Date().toISOString(),
-                arrivalTime: new Date(Date.now() + 7 * 3600000).toISOString(),
-            },
-            passengers: [{ firstName: 'John', lastName: 'Doe' }],
-            totalPrice: 450,
-            status: 'confirmed'
-        });
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        res.json(booking);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
