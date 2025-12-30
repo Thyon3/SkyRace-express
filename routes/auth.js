@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { validate, authSchema } = require('../middleware/validation');
 
 // Register
-router.post('/register', async (req, res) => {
+router.post('/register', validate(authSchema), async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
