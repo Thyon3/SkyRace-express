@@ -30,6 +30,10 @@ app.use('/api/admin/users', require('./routes/admin/users'));
 app.use('/api/admin/bookings', require('./routes/admin/bookings'));
 app.use('/api/admin/flights', require('./routes/admin/flights'));
 app.use('/api/admin/dashboard', require('./routes/admin/dashboard'));
+app.use('/api/admin/payments', require('./routes/admin/payments'));
+app.use('/api/admin/revenue', require('./routes/admin/revenue'));
+app.use('/api/admin/airlines', require('./routes/admin/airlines'));
+app.use('/api/admin/airports', require('./routes/admin/airports'));
 app.use('/api/admin/audit', require('./routes/admin/audit'));
 
 const { errorHandler } = require('./middleware/error');
