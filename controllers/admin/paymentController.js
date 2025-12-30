@@ -11,12 +11,27 @@ exports.getAllPayments = async (req, res) => {
         if (method) query.paymentMethod = method;
         if (search) query.transactionId = { $regex: search, $options: 'i' };
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
         const payments = await Payment.find(query)
             .populate('user', 'name email')
             .populate('booking', 'bookingId')
+            .skip(skip)
+            .limit(limit)
             .sort({ createdAt: -1 });
 
-        res.json({ payments });
+        const total = await Payment.countDocuments(query);
+
+        res.json({
+            payments,
+            pagination: {
+                total,
+                page,
+                pages: Math.ceil(total / limit)
+            }
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
