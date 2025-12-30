@@ -27,6 +27,33 @@ exports.getDashboardMetrics = async (req, res) => {
             createdAt: { $gte: startOfMonth }
         });
 
+        // Chart Data (Last 6 Months)
+        const months = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            months.push({
+                month: d.getMonth(),
+                year: d.getFullYear(),
+                name: d.toLocaleString('default', { month: 'short' })
+            });
+        }
+
+        const chartData = await Promise.all(months.map(async ({ month, year, name }) => {
+            const start = new Date(year, month, 1);
+            const end = new Date(year, month + 1, 0);
+
+            const bookings = await Booking.find({
+                createdAt: { $gte: start, $lte: end },
+                status: 'confirmed'
+            });
+
+            const revenue = bookings.reduce((sum, b) => sum + b.totalPrice, 0);
+            const bookingCount = bookings.length;
+
+            return { name, revenue, bookings: bookingCount };
+        }));
+
         res.json({
             metrics: {
                 totalUsers,
@@ -36,8 +63,9 @@ exports.getDashboardMetrics = async (req, res) => {
                 todayBookings,
                 monthlyBookings
             },
+            chartData,
             recentBookings: await Booking.find()
-                .populate('user', 'name')
+                .populate('user', 'name email')
                 .populate('flight', 'airline flightNumber')
                 .limit(5)
                 .sort({ createdAt: -1 })
