@@ -48,4 +48,18 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Update Profile
+router.put('/profile', async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        // Mock update
+        res.json({
+            message: 'Profile updated successfully',
+            user: { name, email }
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
