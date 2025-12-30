@@ -29,6 +29,13 @@ const userSchema = new mongoose.Schema({
         enum: ['Bronze', 'Silver', 'Gold', 'Platinum'],
         default: 'Bronze',
     },
+    role: {
+        type: String,
+        enum: ['USER', 'ADMIN'],
+        default: 'USER',
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
     savedPassengers: [{
         firstName: String,
         lastName: String,
