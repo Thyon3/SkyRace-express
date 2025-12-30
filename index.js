@@ -19,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/password', require('./routes/password'));
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/payments', require('./routes/payments'));
