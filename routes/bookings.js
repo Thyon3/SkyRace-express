@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
+const { validate, bookingSchema } = require('../middleware/validation');
 
 // Create a booking
-router.post('/', async (req, res) => {
+router.post('/', validate(bookingSchema), async (req, res) => {
     try {
         const { flightId, passengers, totalPrice } = req.body;
 
