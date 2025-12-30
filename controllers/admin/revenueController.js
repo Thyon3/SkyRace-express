@@ -26,7 +26,7 @@ exports.getRevenueStats = async (req, res) => {
 exports.getRouteStats = async (req, res) => {
     try {
         const stats = await Booking.aggregate([
-            { $match: { status: 'CONFIRMED' } },
+            { $match: { status: 'confirmed' } },
             {
                 $lookup: {
                     from: 'flights',
@@ -43,7 +43,7 @@ exports.getRouteStats = async (req, res) => {
                         destination: '$flightDetails.destination'
                     },
                     bookings: { $sum: 1 },
-                    revenue: { $sum: '$totalAmount' }
+                    revenue: { $sum: '$totalPrice' }
                 }
             },
             { $sort: { bookings: -1 } },
