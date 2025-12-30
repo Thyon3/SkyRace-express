@@ -7,7 +7,7 @@ router.use(requireAdmin);
 
 router.get('/', airportController.getAllAirports);
 router.post('/', airportController.createAirport);
-router.patch('/:id', airportController.updateAirport);
+router.put('/:id', airportController.updateAirport);
 router.delete('/:id', airportController.deleteAirport);
 
 module.exports = router;
