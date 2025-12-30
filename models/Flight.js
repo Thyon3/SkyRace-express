@@ -25,6 +25,10 @@ const flightSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    duration: {
+        type: Number,
+        required: true,
+    },
     price: {
         type: Number,
         required: true,
@@ -32,6 +36,10 @@ const flightSchema = new mongoose.Schema({
     currency: {
         type: String,
         default: 'USD',
+    },
+    isDirect: {
+        type: Boolean,
+        default: true,
     },
 });
 

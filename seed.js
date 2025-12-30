@@ -1,53 +1,57 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Flight = require('./models/Flight');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const flights = [
     {
         airline: 'SkyRace Air',
-        flightNumber: 'SK101',
+        flightNumber: 'SR101',
         origin: 'New York (JFK)',
         destination: 'London (LHR)',
-        departureTime: new Date(Date.now() + 86400000), // Tomorrow
-        arrivalTime: new Date(Date.now() + 86400000 + 7 * 3600000),
+        departureTime: new Date('2024-06-01T10:00:00Z'),
+        arrivalTime: new Date('2024-06-01T17:15:00Z'),
+        duration: 435,
         price: 450,
-        currency: 'USD'
+        isDirect: true,
     },
     {
-        airline: 'SkyRace Air',
-        flightNumber: 'SK102',
+        airline: 'Oceanic',
+        flightNumber: 'OC815',
         origin: 'London (LHR)',
         destination: 'Paris (CDG)',
-        departureTime: new Date(Date.now() + 2 * 86400000),
-        arrivalTime: new Date(Date.now() + 2 * 86400000 + 2 * 3600000),
+        departureTime: new Date('2024-06-02T08:00:00Z'),
+        arrivalTime: new Date('2024-06-02T09:15:00Z'),
+        duration: 75,
         price: 120,
-        currency: 'USD'
+        isDirect: true,
     },
     {
-        airline: 'Oceanic Airlines',
-        flightNumber: 'OC815',
-        origin: 'Sydney (SYD)',
-        destination: 'Los Angeles (LAX)',
-        departureTime: new Date(Date.now() + 3 * 86400000),
-        arrivalTime: new Date(Date.now() + 3 * 86400000 + 14 * 3600000),
-        price: 1200,
-        currency: 'USD'
+        airline: 'Global Jet',
+        flightNumber: 'GJ202',
+        origin: 'Paris (CDG)',
+        destination: 'Tokyo (NRT)',
+        departureTime: new Date('2024-06-03T12:00:00Z'),
+        arrivalTime: new Date('2024-06-04T06:00:00Z'),
+        duration: 1080,
+        price: 850,
+        isDirect: false,
     },
 ];
 
-const seedDB = async () => {
+async function seed() {
     try {
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/skyrace');
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('Connected to MongoDB');
+
         await Flight.deleteMany({});
         await Flight.insertMany(flights);
+
         console.log('Database seeded successfully');
         process.exit();
     } catch (err) {
-        console.error(err);
+        console.error('Seeding failed:', err);
         process.exit(1);
     }
-};
+}
 
-seedDB();
+seed();
