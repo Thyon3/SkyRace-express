@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 dotenv.config();
 
 const app = express();
+app.use(morgan('dev'));
 const PORT = process.env.PORT || 5000;
 
 const flightsRoute = require('./routes/flights');
