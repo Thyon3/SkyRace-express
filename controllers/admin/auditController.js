@@ -2,25 +2,25 @@ const AuditLog = require('../../models/AuditLog');
 
 exports.getAuditLogs = async (req, res) => {
     try {
-        const { action, resource, adminId, page = 1, limit = 20 } = req.query;
+        const { page = 1, limit = 20, action, resource } = req.query;
         const query = {};
 
         if (action) query.action = action;
         if (resource) query.resource = resource;
-        if (adminId) query.admin = adminId;
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
         const logs = await AuditLog.find(query)
             .populate('admin', 'name email')
+            .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit))
-            .sort({ timestamp: -1 });
+            .limit(parseInt(limit));
 
         const total = await AuditLog.countDocuments(query);
 
         res.json({
-            logs,
+            success: true,
+            data: logs,
             pagination: {
                 total,
                 page: parseInt(page),
@@ -28,6 +28,9 @@ exports.getAuditLogs = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
 };

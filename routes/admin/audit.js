@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const auditController = require('../../controllers/admin/auditController');
-const { requireAdmin } = require('../../middleware/adminAuth');
+const { protect, admin } = require('../../middleware/auth');
 
-router.use(requireAdmin);
-
-router.get('/', auditController.getAuditLogs);
+router.get('/', protect, admin, auditController.getAuditLogs);
 
 module.exports = router;
