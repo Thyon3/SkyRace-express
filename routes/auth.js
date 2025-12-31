@@ -3,10 +3,11 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { validate, authSchema } = require('../middleware/validation');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // Register
 router.post('/register', validate(authSchema), async (req, res) => {
+
     try {
         const { name, email, password } = req.body;
 
@@ -65,7 +66,8 @@ router.post('/login', async (req, res) => {
 });
 
 // Update Profile
-router.put('/profile', auth, async (req, res) => {
+router.put('/profile', protect, async (req, res) => {
+
     try {
         const { name } = req.body;
         const user = await User.findByIdAndUpdate(
@@ -92,7 +94,8 @@ router.put('/profile', auth, async (req, res) => {
 });
 
 // Update Preferences
-router.put('/preferences', auth, async (req, res) => {
+router.put('/preferences', protect, async (req, res) => {
+
     try {
         const { language, currency, theme } = req.body;
         const user = await User.findById(req.user.id);
@@ -110,7 +113,8 @@ router.put('/preferences', auth, async (req, res) => {
 });
 
 // Get Saved Passengers
-router.get('/saved-passengers', auth, async (req, res) => {
+router.get('/saved-passengers', protect, async (req, res) => {
+
     try {
         const user = await User.findById(req.user.id);
         res.json(user.savedPassengers);
@@ -120,7 +124,8 @@ router.get('/saved-passengers', auth, async (req, res) => {
 });
 
 // Add Saved Passenger
-router.post('/saved-passengers', auth, async (req, res) => {
+router.post('/saved-passengers', protect, async (req, res) => {
+
     try {
         const user = await User.findById(req.user.id);
         user.savedPassengers.push(req.body);

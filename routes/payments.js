@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // Create Payment Intent (Mock)
-router.post('/create-intent', auth, async (req, res) => {
+router.post('/create-intent', protect, async (req, res) => {
+
     try {
         const { amount, currency } = req.body;
 
@@ -20,7 +21,8 @@ router.post('/create-intent', auth, async (req, res) => {
 });
 
 // Verify Payment (Mock)
-router.post('/verify', auth, async (req, res) => {
+router.post('/verify', protect, async (req, res) => {
+
     try {
         const { paymentId } = req.body;
 

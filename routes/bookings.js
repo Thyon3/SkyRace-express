@@ -3,10 +3,12 @@ const router = express.Router();
 const Booking = require('../models/Booking');
 const Flight = require('../models/Flight');
 const User = require('../models/User');
-const auth = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
+
 
 // Create Booking
-router.post('/', auth, async (req, res) => {
+router.post('/', protect, async (req, res) => {
+
     try {
         const { flightId, passengers, totalPrice, seats } = req.body;
 
@@ -73,7 +75,8 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Get User Bookings
-router.get('/', auth, async (req, res) => {
+router.get('/', protect, async (req, res) => {
+
     try {
         const bookings = await Booking.find({ user: req.user.id })
             .populate('flight')
@@ -85,7 +88,8 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Cancel Booking
-router.put('/:id/cancel', auth, async (req, res) => {
+router.put('/:id/cancel', protect, async (req, res) => {
+
     try {
         const booking = await Booking.findOne({ _id: req.params.id, user: req.user.id });
         if (!booking) {
