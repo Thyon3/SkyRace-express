@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bookingController = require('../../controllers/admin/bookingController');
-const { requireAdmin } = require('../../middleware/adminAuth');
+const { protect, admin } = require('../../middleware/auth');
 
-router.use(requireAdmin);
+router.use(protect);
+router.use(admin);
+
 
 router.get('/', bookingController.getAllBookings);
 router.get('/:id', bookingController.getBookingById);

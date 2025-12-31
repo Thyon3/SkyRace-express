@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const airlineController = require('../../controllers/admin/airlineController');
-const { requireAdmin } = require('../../middleware/adminAuth');
+const { protect, admin } = require('../../middleware/auth');
 
-router.use(requireAdmin);
+router.use(protect);
+router.use(admin);
+
 
 router.get('/', airlineController.getAllAirlines);
 router.post('/', airlineController.createAirline);

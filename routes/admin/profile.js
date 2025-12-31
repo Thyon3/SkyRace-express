@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const profileController = require('../../controllers/admin/profileController');
-const { requireAdmin } = require('../../middleware/adminAuth');
+const { protect, admin } = require('../../middleware/auth');
 
-router.use(requireAdmin);
+router.use(protect);
+router.use(admin);
+
 
 router.get('/', profileController.getProfile);
 router.patch('/', profileController.updateProfile);
