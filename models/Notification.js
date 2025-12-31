@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -11,18 +16,16 @@ const notificationSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['INFO', 'WARNING', 'SUCCESS', 'PROMOTION'],
-        default: 'INFO'
+        enum: ['FLIGHT_UPDATE', 'BOOKING_CONFIRMATION', 'PROMOTION', 'SYSTEM'],
+        default: 'SYSTEM'
     },
-    target: {
-        type: String,
-        enum: ['ALL', 'ADMINS', 'USERS'],
-        default: 'ALL'
+    isRead: {
+        type: Boolean,
+        default: false
     },
-    sentBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    data: {
+        type: Map,
+        of: String
     },
     createdAt: {
         type: Date,
