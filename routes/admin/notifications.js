@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const notificationController = require('../../controllers/admin/notificationController');
-const { requireAdmin } = require('../../middleware/adminAuth');
+const { protect, admin } = require('../../middleware/auth');
 
-router.use(requireAdmin);
+router.use(protect);
+router.use(admin);
+
 
 router.get('/', notificationController.getNotifications);
 router.post('/broadcast', notificationController.sendBroadcast);
