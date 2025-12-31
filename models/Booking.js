@@ -4,7 +4,10 @@ const passengerSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     passportNumber: String,
+    isCheckedIn: { type: Boolean, default: false },
+    boardingPassCode: { type: String },
 });
+
 
 const bookingSchema = new mongoose.Schema({
     flight: {
