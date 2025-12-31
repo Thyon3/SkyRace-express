@@ -55,3 +55,33 @@ exports.getRouteStats = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+exports.getAirlineStats = async (req, res) => {
+    try {
+        const stats = await Booking.aggregate([
+            { $match: { status: 'confirmed' } },
+            {
+                $lookup: {
+                    from: 'flights',
+                    localField: 'flight',
+                    foreignField: '_id',
+                    as: 'flightDetails'
+                }
+            },
+            { $unwind: '$flightDetails' },
+            {
+                $group: {
+                    _id: '$flightDetails.airline',
+                    bookings: { $sum: 1 },
+                    revenue: { $sum: '$totalPrice' }
+                }
+            },
+            { $sort: { revenue: -1 } }
+        ]);
+
+        res.json({ stats });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
