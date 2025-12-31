@@ -37,6 +37,10 @@ app.use('/api/payments', require('./routes/payments'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/support', require('./routes/support'));
 app.use('/api/loyalty', require('./routes/loyalty'));
+app.use('/api/checkin', require('./routes/checkin'));
+app.use('/api/promos', require('./routes/promos'));
+
+
 
 
 
